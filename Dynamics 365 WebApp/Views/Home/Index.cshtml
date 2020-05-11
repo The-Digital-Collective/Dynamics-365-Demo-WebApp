@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Dynamics_365_WebApp.Models.Contact>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <p>
+            <br />
+            This is a demo application that connects to a cloud instance of Dynamics 365 and
+            perfoirms CRUD operations on data in the Contact entity.
+        </p>
+        <p>
+            <br />
+            Click the button below for more information
+            on the Dynamics 365 Contact entity
+        </p>
+        <p><a class="btn btn-default" href="https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/contract" target="_blank">Dynamics Contact Entity Reference &raquo;</a></p>
+        <p>
+            <br />
+        </p>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Create New Contact", "Create")
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.JobTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BusinessPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChosenReference)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BusinessPhone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChosenReference)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditContact", new { id = item.ContactId }) |
+                @Html.ActionLink("Delete", "DeleteContact", new { id = item.ContactId }, new { onclick = "return confirm('Are sure wants to delete this record?');" })
+            </td>
+        </tr>
+    }
+
+</table>

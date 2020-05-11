@@ -1,0 +1,21 @@
+﻿@if ((bool) ViewData["crmConnection"])
+{
+    <text>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text">
+                Connected to Dynamics
+            </li>
+        </ul>
+    </text>
+}
+else
+{
+    <text>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text">
+                Not connected to Dynamics
+            </li>
+        </ul>
+    </text>
+}
+
