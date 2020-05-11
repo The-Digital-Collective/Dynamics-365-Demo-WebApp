@@ -13,11 +13,15 @@ namespace Dynamics_365_WebApp.DAL
         /// Uses the connection string to authenticate a Linq query
         /// to Dynamics and the save the results in a list of type Contact (see Model).
         /// 
-        /// Note: the query throws an exception 'the given key was not present in the dictionary' 
-        /// if any of the attributes are empty (such as email address); they may have null values 
-        /// but defaulting 'firstname', 'lastname', etc. to "" if the value is null doesn't fix the issue.
-        /// Therefore for the demo I've targeted data that doesn't have empty values. This area needs a story 
-        /// and more investigation - possibly with MS support. 
+        /// Note: the Linq query throws an exception 'the given key was not present in the dictionary' 
+        /// if any of the attributes are empty (such as email address). This is a dynamic entity issue - 
+        /// if a CRM property doesn't have a value it will not be returned in a dynamic entity object, 
+        /// this causes the exception to be thrown in the query. We need to use Dynamic entities to 
+        /// decouple the applications. This area needs a story and more investigation, not just how 
+        /// to handle dynamic entities but also the most efficient method for extracting data 
+        /// for example using the 'RetrieveMultipleRequest' Class:  
+        /// https://docs.microsoft.com/en-us/dotnet/api/microsoft.xrm.sdk.messages.retrievemultiplerequest?view=dynamics-general-ce-9
+        /// For the demo I've targeted data that doesn't have empty values in Dynamics. 
         /// </summary>
         /// <param name="crmConnection"></param>
         /// <returns> List of contact objects </returns>
@@ -56,7 +60,7 @@ namespace Dynamics_365_WebApp.DAL
 
                             };
 
-
+                var somedata = query;
                 foreach (var record in query)
                 {
                     // Add each query record into the list of contacts and retrun
@@ -66,7 +70,7 @@ namespace Dynamics_365_WebApp.DAL
                                                 record.contact.email, 
                                                 record.contact.businessPhone, 
                                                 record.contact.contactId,
-                                                record.contact.chosenReference));
+                                                record.contact.chosenReference)); 
                 }
             }
             catch 
