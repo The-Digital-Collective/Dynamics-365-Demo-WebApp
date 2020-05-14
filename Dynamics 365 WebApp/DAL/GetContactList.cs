@@ -42,7 +42,7 @@ namespace Dynamics_365_WebApp.DAL
                                   (string)contact["firstname"] == "Andrew" ||
                                   (string)contact["firstname"] == "Alexis" ||
                                   (string)contact["lastname"] == "Belacqua" ||
-                                  (string)contact["lastname"] == "Quill"   ||
+                                  (string)contact["firstname"] == "Peter"   ||
                                   (string)contact["firstname"] == "Nick"   
                             orderby attribute["new_chosenreference"]
                             select new
