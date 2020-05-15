@@ -4,6 +4,8 @@
     ViewBag.Title = "Home Page";
 }
 
+
+
 <div class="row">
     <div class="col-md-8">
         <p>
@@ -11,17 +13,39 @@
             This is a demo application that connects to a cloud instance of Dynamics 365 and
             perfoirms CRUD operations on data in the Contact entity.
         </p>
+
         <p>
             <br />
             Click the button below for more information
             on the Dynamics 365 Contact entity
         </p>
-        <p><a class="btn btn-default" href="https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/contact" target="_blank">Dynamics Contact Entity Reference &raquo;</a></p>
         <p>
-            <br />
+            <a class="btn btn-default" href="https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/contact" target="_blank">
+                Dynamics Contact Entity Reference &raquo;
+            </a>
         </p>
     </div>
 </div>
+
+
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <p>
+        <br />
+    </p>
+
+    <b> Search Option:</b> @Html.RadioButton("option", "Last Name", (string)ViewData["radioButtonSelected"] == "Last Name"? true : false) <text>Last Name</text> 
+                           @Html.RadioButton("option", "First Name", (string)ViewData["radioButtonSelected"] == "First Name"? true : false) <text> First Name </text>
+
+    @Html.TextBox("search")
+    <input type="submit" name="submit" value="Search" />
+
+    <p>
+        <br />
+    </p>
+}
+
 <p>
     @Html.ActionLink("Create New Contact", "Create")
 </p>

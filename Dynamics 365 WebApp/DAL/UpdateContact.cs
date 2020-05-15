@@ -19,22 +19,26 @@ namespace Dynamics_365_WebApp.DAL
             try
             {
                 Entity contact = new Entity("contact");
+
                 contact = service.Retrieve(contact.LogicalName, Guid.Parse(updatedContact.ContactId), new ColumnSet(true));
-                contact["firstname"] = updatedContact.FirstName.ToString();
-                contact["lastname"] = updatedContact.LastName.ToString();
-                contact["jobtitle"] = updatedContact.JobTitle.ToString();
-                contact["telephone1"] = updatedContact.BusinessPhone.ToString();
-                contact["emailaddress1"] = updatedContact.Email.ToString();
-                contact["new_chosenreference"] = updatedContact.ChosenReference.ToString();
+
+                if (updatedContact.FirstName != null)       contact["firstname"] = updatedContact.FirstName.ToString();
+                if (updatedContact.LastName != null)        contact["lastname"] = updatedContact.LastName.ToString();
+                if (updatedContact.JobTitle != null)        contact["jobtitle"] = updatedContact.JobTitle.ToString();
+                if(updatedContact.BusinessPhone != null)    contact["telephone1"] = updatedContact.BusinessPhone.ToString();
+                if (updatedContact.Email != null)           contact["emailaddress1"] = updatedContact.Email.ToString();
+                if (updatedContact.ChosenReference != null) contact["new_chosenreference"] = updatedContact.ChosenReference.ToString();
+                
                 service.Update(contact);
                 return (true);
             }
-            catch 
+            catch (Exception ex)
             {
                 return (false);
             }
 
         }
+        // a.Attributes.ContainsKey("firstname")? a.Attributes["firstname"].ToString() : null
 
     }
 }

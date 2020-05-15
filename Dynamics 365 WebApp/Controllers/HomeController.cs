@@ -12,12 +12,13 @@ namespace Dynamics_365_WebApp.Controllers
         /// Establish a connection to Dynamics and get a list of contacts 
         /// </summary>
         /// <returns> List of contacts of type Contact </returns>
-        public ActionResult Index()
+        public ActionResult Index(string option, string search)
         {
             var (crmConnection, service) = new DynamicsConnection().ConnectToDynamics();
-            var contactList = new GetContactList().GetListOfContacts(crmConnection);
+            var contactList = new NewGetContactList().GetListOfContacts(crmConnection, search, option);
 
             ViewData["crmConnection"] = (service != null) ? true : false;
+            ViewData["radioButtonSelected"] = (option == null) ? "Last Name" : "First Name";
 
             return View(contactList);
         }
@@ -73,7 +74,7 @@ namespace Dynamics_365_WebApp.Controllers
             // Get the contact data from Dynamics for the given contact id and pass 
             // to the view.
             var (crmConnection, service) = new DynamicsConnection().ConnectToDynamics();
-            var updateContact = new GetContact().GetContactForId(crmConnection, id);
+            var updateContact = new NewGetContact().GetContact(crmConnection, id);
 
             ViewData["crmConnection"] = (service != null) ? true : false;
             return View(updateContact);

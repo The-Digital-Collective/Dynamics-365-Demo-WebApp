@@ -17,12 +17,13 @@ namespace Dynamics_365_WebApp.DAL
             try
             {
                 Entity contact = new Entity("contact");
-                contact["firstname"] = newContact.FirstName;
-                contact["lastname"] = newContact.LastName;
-                contact["jobtitle"] = newContact.JobTitle;
-                contact["emailaddress1"] = newContact.Email;
-                contact["telephone1"] = newContact.BusinessPhone;
-                contact["new_chosenreference"] = newContact.ChosenReference;
+
+                if (newContact.FirstName != null) contact["firstname"] = newContact.FirstName.ToString();
+                if (newContact.LastName != null) contact["lastname"] = newContact.LastName.ToString();
+                if (newContact.JobTitle != null) contact["jobtitle"] = newContact.JobTitle.ToString();
+                if (newContact.BusinessPhone != null) contact["telephone1"] = newContact.BusinessPhone.ToString();
+                if (newContact.Email != null) contact["emailaddress1"] = newContact.Email.ToString();
+                if (newContact.ChosenReference != null) contact["new_chosenreference"] = newContact.ChosenReference.ToString();
                 service.Create(contact);
                 
                 return (true);
