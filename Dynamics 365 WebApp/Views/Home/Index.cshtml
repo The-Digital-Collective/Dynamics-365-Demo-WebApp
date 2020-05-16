@@ -27,16 +27,14 @@
     </div>
 </div>
 
-
-
 @using (Html.BeginForm("Index", "Home", FormMethod.Get))
 {
     <p>
         <br />
     </p>
 
-    <b> Search Option:</b> @Html.RadioButton("option", "Last Name", (string)ViewData["radioButtonSelected"] == "Last Name"? true : false) <text>Last Name</text> 
-                           @Html.RadioButton("option", "First Name", (string)ViewData["radioButtonSelected"] == "First Name"? true : false) <text> First Name </text>
+    <b> Search Option:</b> @Html.RadioButton("option", "Last Name",  ViewBag.RadioButtonSelected == "Last Name"? true : false) <text>Last Name</text> 
+                           @Html.RadioButton("option", "First Name", ViewBag.RadioButtonSelected == "First Name"? true : false) <text> First Name </text>
 
     @Html.TextBox("search")
     <input type="submit" name="submit" value="Search" />
@@ -47,7 +45,7 @@
 }
 
 <p>
-    @Html.ActionLink("Create New Contact", "Create")
+    @Html.ActionLink("Create New Contact", "Create", new {searchValue = ViewBag.SearchValue, selectionValue = ViewBag.RadioButtonSelected})
 </p>
 
 <table class="table">
@@ -95,8 +93,8 @@
                 @Html.DisplayFor(modelItem => item.ChosenReference)
             </td>
             <td>
-                @Html.ActionLink("Edit", "EditContact", new { id = item.ContactId }) |
-                @Html.ActionLink("Delete", "DeleteContact", new { id = item.ContactId }, new { onclick = "return confirm('Are sure wants to delete this record?');" })
+                @Html.ActionLink("Edit", "EditContact", new { id = item.ContactId, searchValue = ViewBag.SearchValue, selectionValue = ViewBag.RadioButtonSelected}) |
+                @Html.ActionLink("Delete", "DeleteContact", new { id = item.ContactId, searchValue = ViewBag.SearchValue, selectionValue = ViewBag.RadioButtonSelected }, new { onclick = "return confirm('Are sure wants to delete this record?');" })
             </td>
         </tr>
     }

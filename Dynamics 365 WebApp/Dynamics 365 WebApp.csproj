@@ -150,8 +150,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DAL\CreateContact.cs" />
-    <Compile Include="DAL\GetContact.cs" />
-    <Compile Include="DAL\GetContactList.cs" />
     <Compile Include="App_Data\DynamicsConnection.cs" />
     <Compile Include="DAL\NewGetContact.cs" />
     <Compile Include="DAL\NewGetContactList.cs" />

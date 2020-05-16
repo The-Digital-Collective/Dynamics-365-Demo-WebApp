@@ -3,98 +3,94 @@ using System.Web.Mvc;
 using Dynamics_365_WebApp.Models;
 using Microsoft.Xrm.Sdk;
 using System;
+using System.Web.Routing;
 
 namespace Dynamics_365_WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        /// <summary>
-        /// Establish a connection to Dynamics and get a list of contacts 
-        /// </summary>
-        /// <returns> List of contacts of type Contact </returns>
         public ActionResult Index(string option, string search)
         {
             var (crmConnection, service) = new DynamicsConnection().ConnectToDynamics();
             var contactList = new NewGetContactList().GetListOfContacts(crmConnection, search, option);
 
-            ViewData["crmConnection"] = (service != null) ? true : false;
-            ViewData["radioButtonSelected"] = (option == null) ? "Last Name" : "First Name";
+            ViewBag.CrmConnection = (service != null) ? true : false;
+            ViewBag.RadioButtonSelected = (option == null) ? "Last Name" : option;
+            ViewBag.SearchValue = search;
 
             return View(contactList);
         }
 
-        public ActionResult Create()
+        public ActionResult Create(string option, string search)
         {
-            ViewData["crmConnection"] = true;
+            ViewBag.CrmConnection = true;
+            ViewBag.RadioButtonSelected = (option == null) ? "Last Name" : option;
+            ViewBag.SearchValue = search;
             return View();
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(Contact newContact)
+        public ActionResult Create(Contact newContact, string searchValue, string selectionValue)
         {
-            /// <summary>
-            /// Establish a connection to Dynamics and creates a new contact record 
-            /// </summary>
-            /// <returns> Redirects to the home page or throws up a message if the record creation in Dynamics was not successful </returns>
-            
+           
             var (_, service) = new DynamicsConnection().ConnectToDynamics();
             var success = new CreateContact().AddContactToDynamics(newContact, service);
 
-            ViewData["crmConnection"] = (service != null) ? true : false;
+            ViewBag.CrmConnection = (service != null) ? true : false;
 
             if (success)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { option = selectionValue, search = searchValue });
             }
             else
             {
-                ViewBag.ErrorMessage = "New record creation failed, please try again. If the problem persists contact the system administrator.";
+                ViewBag.ErrorMessage = "New record creation failed.";
                 return View();
             }
         }
 
-         public ActionResult DeleteContact(string id)
+         public ActionResult DeleteContact(string id, string searchValue, string selectionValue)
         {
-            // Delete the contact for the given id from Dynamics
-            // and redirect to the home page
             var (_, service) = new DynamicsConnection().ConnectToDynamics();
             Entity contact = new Entity("contact");
 
             if (service != null)
             {
                 service.Delete(contact.LogicalName, Guid.Parse(id));
-            } 
+            }
 
-            ViewData["crmConnection"] = (service != null) ? true : false;
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { option = selectionValue, search = searchValue });
         }
 
-        public ActionResult EditContact(string id)
+        public ActionResult EditContact(string id, string searchValue, string selectionValue)
         {
-            // Get the contact data from Dynamics for the given contact id and pass 
-            // to the view.
             var (crmConnection, service) = new DynamicsConnection().ConnectToDynamics();
             var updateContact = new NewGetContact().GetContact(crmConnection, id);
 
-            ViewData["crmConnection"] = (service != null) ? true : false;
+            ViewBag.CrmConnection = (service != null) ? true : false;
+            ViewBag.RadioButtonSelected = selectionValue;
+            ViewBag.SearchValue = searchValue;
             return View(updateContact);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditContact(Contact updatedContact)
+        public ActionResult EditContact(Contact updatedContact, string searchValue, string selectionValue)
         {
             var (_, service) = new DynamicsConnection().ConnectToDynamics();
             var success = new UpdateContact().UpdateContactData(service, updatedContact);
 
-            ViewData["crmConnection"] = (service != null) ? true : false;
+            ViewBag.CrmConnection = (service != null) ? true : false;
 
             if (success)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new {option = selectionValue, search = searchValue});
             }
             else
             {
-                ViewBag.ErrorMessage = "Record update failed, please try again. If the problem persists contact the system administrator.";
+                ViewBag.ErrorMessage = "Record update failed.";
+                ViewBag.CrmConnection = (service != null) ? true : false;
+                ViewBag.RadioButtonSelected = selectionValue;
+                ViewBag.SearchValue = searchValue;
                 return View();
             }
         }

@@ -30,11 +30,11 @@ namespace Dynamics_365_WebApp.DAL
 
                 if (searchOption == "First Name")
                 {
-                    querycontact.Criteria.AddCondition("firstname", ConditionOperator.BeginsWith, searchValue);
+                    querycontact.Criteria.AddCondition("firstname", ConditionOperator.BeginsWith, searchValue == null? "" : searchValue);
                 }
                 else
                 {
-                    querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, searchValue);
+                    querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, searchValue == null? "" : searchValue);
                 }
                     
                 var contactRecords = crmConnection.RetrieveMultiple(querycontact);
