@@ -11,12 +11,16 @@ namespace Dynamics_365_WebApp.DAL
     public class NewGetContactList
     {
 
-        public List<Contact> GetListOfContacts(IOrganizationService crmConnection, string searchValue, string searchOption)
+        public (List<Contact>, int?, bool, bool) GetListOfContacts(IOrganizationService crmConnection, string searchValue, string searchOption, int? currentPageNumber)
         {
             
-            List<Contact> ContactList = new List<Contact>();
-            List<Contact> sortedContactList = new List<Contact>();
- 
+            var contactList = new List<Contact>();
+            var paginatedContactList = new List<Contact>();
+            var pageSize = 12;
+            var PageNumber = (currentPageNumber == null) ? 0 : currentPageNumber;
+            var hasPreviouPage = false;
+            var hasNextPage = false;
+
             try
             {
                 var serviceContext = new OrganizationServiceContext(crmConnection);
@@ -42,7 +46,7 @@ namespace Dynamics_365_WebApp.DAL
                 foreach (var a in contactRecords.Entities)
                 {
  
-                    ContactList.Add(new Contact(a.Attributes.ContainsKey("firstname")? a.Attributes["firstname"].ToString() : null,
+                    contactList.Add(new Contact(a.Attributes.ContainsKey("firstname")? a.Attributes["firstname"].ToString() : null,
                                                 a.Attributes.ContainsKey("lastname") ? a.Attributes["lastname"].ToString() : null,
                                                 a.Attributes.ContainsKey("jobtitle") ? a.Attributes["jobtitle"].ToString() : null,
                                                 a.Attributes.ContainsKey("emailaddress1") ? a.Attributes["emailaddress1"].ToString() : null,
@@ -51,16 +55,23 @@ namespace Dynamics_365_WebApp.DAL
                                                 a.Attributes.ContainsKey("new_chosenreference") ? a.Attributes["new_chosenreference"].ToString() : null));
                 }
 
-                sortedContactList = ContactList.OrderBy(x => x.ChosenReference).ToList();
+                var totalPages = (int)Math.Ceiling(contactList.Count / (double)pageSize);
+                var sortedContactList = contactList.OrderBy(x => x.LastName).ToList();
+                hasPreviouPage = (PageNumber > 0) ? true : false;
+                hasNextPage = ((PageNumber + 1) < totalPages) ? true : false;
+                                   
+                paginatedContactList = (PageNumber <= totalPages) ? sortedContactList.Skip((int)PageNumber * pageSize).Take(pageSize).ToList() : null;
 
+                PageNumber++;
+            
             }
             catch (Exception ex)
             {
-                // If there is an exception then return a blank list
-                sortedContactList.Add(new Contact(null, null, null, null, null, null, null));
+                // If there is an exception then return an empty list
+                paginatedContactList = null;
             }
 
-            return (sortedContactList);
+            return (paginatedContactList, PageNumber, hasPreviouPage, hasNextPage);
         }
 
     }
