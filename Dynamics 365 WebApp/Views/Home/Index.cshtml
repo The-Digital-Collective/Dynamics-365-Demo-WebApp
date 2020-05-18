@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Dynamics_365_WebApp.Models.Contact>
+@using Dynamics_365_WebApp.Models
 
 
 @{
@@ -33,8 +34,8 @@
         <br />
     </p>
 
-    <b> Search Option:</b> @Html.RadioButton("option", "Last Name", ViewBag.RadioButtonSelected == "Last Name" ? true : false) <text>Last Name</text>
-    @Html.RadioButton("option", "First Name", ViewBag.RadioButtonSelected == "First Name" ? true : false) <text> First Name </text>
+    <b> Search Option:</b> @Html.RadioButton("option", "Last Name", MyViewData.RadioButtonSelected == "Last Name" ? true : false) <text>Last Name</text>
+    @Html.RadioButton("option", "First Name", MyViewData.RadioButtonSelected == "First Name" ? true : false) <text> First Name </text>
 
     @Html.TextBox("search")
     <input type="submit" name="submit" value="Search" />
@@ -45,7 +46,7 @@
 }
 
 <p>
-    @Html.ActionLink("Create New Contact", "Create", new { searchValue = ViewBag.SearchValue, selectionValue = ViewBag.RadioButtonSelected, currentPageNumber = ViewBag.PageNumber })
+    @Html.ActionLink("Create New Contact", "Create", new { search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber })
 </p>
 
 <table class="table">
@@ -93,8 +94,8 @@
                 @Html.DisplayFor(modelItem => item.ChosenReference)
             </td>
             <td>
-                @Html.ActionLink("Edit", "EditContact", new { id = item.ContactId, searchValue = ViewBag.SearchValue, selectionValue = ViewBag.RadioButtonSelected, currentPageNumber = ViewBag.PageNumber  }) |
-                @Html.ActionLink("Delete", "DeleteContact", new { id = item.ContactId, searchValue = ViewBag.SearchValue, selectionValue = ViewBag.RadioButtonSelected, currentPageNumber = ViewBag.PageNumber  }, new { onclick = "return confirm('Are sure wants to delete this record?');" })
+                @Html.ActionLink("Edit", "EditContact", new { id = item.ContactId, search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber }) |
+                @Html.ActionLink("Delete", "DeleteContact", new { id = item.ContactId, search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber }, new { onclick = "return confirm('Are sure wants to delete this record?');" })
             </td>
         </tr>
     }
@@ -102,9 +103,9 @@
 </table>
 
 @{
-    var prevDisabled = !ViewBag.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !ViewBag.HasNextPage ? "disabled" : "";
+    var prevDisabled = (bool)!MyViewData.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = (bool)!MyViewData.HasNextPage ? "disabled" : "";
 }
 
-<a href="@Url.Action("Index", new { search = ViewBag.SearchValue, option = ViewBag.RadioButtonSelected, currentPageNumber = ViewBag.PageNumber - 2})" class="btn btn-default @prevDisabled" role="button">Previous</a>
-<a href="@Url.Action("Index", new { search = ViewBag.SearchValue, option = ViewBag.RadioButtonSelected, currentPageNumber = ViewBag.PageNumber })" class="btn btn-default @nextDisabled" role="button">Next</a>
+<a href="@Url.Action("Index", new { search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber - 2})" class="btn btn-default @prevDisabled" role="button">Previous</a>
+<a href="@Url.Action("Index", new { search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber })" class="btn btn-default @nextDisabled" role="button">Next</a>

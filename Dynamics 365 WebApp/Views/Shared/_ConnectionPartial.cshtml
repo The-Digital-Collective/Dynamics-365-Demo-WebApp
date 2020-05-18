@@ -1,9 +1,11 @@
-﻿@if (ViewBag.CrmConnection)
+﻿@using Dynamics_365_WebApp.Models
+
+@if (MyViewData.CrmConnection)
 {
     <text>
         <ul class="nav navbar-nav navbar-right">
             <li class="navbar-text">
-                Connected to Dynamics
+                Connected to Dynamics 365
             </li>
         </ul>
     </text>
