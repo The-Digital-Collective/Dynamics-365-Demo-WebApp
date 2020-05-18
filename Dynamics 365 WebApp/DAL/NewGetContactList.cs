@@ -39,7 +39,7 @@ namespace Dynamics_365_WebApp.DAL
                 // Select search criteria based on the radio button selection.
                 switch (searchOption)
                 {
-                    case "First name": querycontact.Criteria.AddCondition("firstname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
+                    case "First Name": querycontact.Criteria.AddCondition("firstname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
                         break;
 
                     case "Last Name": querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
