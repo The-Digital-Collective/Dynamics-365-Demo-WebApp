@@ -8,12 +8,10 @@ namespace Dynamics_365_WebApp.DAL
 {
     public class UpdateContact
     {
-        /// <summary>
-        /// Update an existing contact record in the Dynamics CRM contact entity
-        /// </summary>
-        /// <param name="service"></param>
-        /// <param name="updatedContact"></param>
-        /// <returns></returns>
+        // Update the Dynamics 365 contact entity with the data in updateContact. Dynamics entities 
+        // hold attributes as key value pairs, so for each attribute in updateContact, if there is a 
+        // value then create the contact Entity key value pair. If the updateContact attribute is null 
+        // then do nothing - do not set up a key without a value as it will throw an exception. 
         public bool UpdateContactData(IOrganizationService service, Contact updatedContact)
         {
             try

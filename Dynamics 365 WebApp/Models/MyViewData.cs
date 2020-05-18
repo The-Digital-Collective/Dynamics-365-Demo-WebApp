@@ -6,6 +6,8 @@ using System.Web;
 
 namespace Dynamics_365_WebApp.Models
 {
+    // Attributes used in storing Dynamics 365 connection status plus page scrolling, 
+    // radio button selection and page count data.
     public static class MyViewData
     {
         public static bool CrmConnection;

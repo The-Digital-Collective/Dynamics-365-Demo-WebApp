@@ -6,12 +6,11 @@ namespace Dynamics_365_WebApp.DAL
 {
     public class CreateContact
     {
-        /// <summary>
-        /// Add new contact data into the Dynamics CRM contact entity
-        /// </summary>
-        /// <param name="newContact"></param>
-        /// <param name="service"></param>
-        /// <returns></returns>
+        // Insert the newContact record into the Dynamics 365 contact entity. 
+        // Dynamics entities hold attributes as key value pairs, so for each attribute in 
+        // newContact, if there is a value then create the contact Entity key value pair. 
+        // If the newContact attribute is null then do nothing - do not set up a key without
+        // a value as it will throw an exception. 
         public bool AddContactToDynamics(Contact newContact, IOrganizationService service)
         {
             try

@@ -5,6 +5,7 @@ using System.Web;
 
 namespace Dynamics_365_WebApp.Models
 {
+    // Contact model used to hold data extracted from the Dynamics 365 contact entity.
     public class Contact
     {
         public string ContactId { get; set; }

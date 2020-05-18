@@ -9,7 +9,8 @@ namespace Dynamics_365_WebApp.DAL
 {
     public class NewGetContact
     {
-
+        // Gets a single contact Entity using the contactid key (passed as id) from Dynamics 365. The returned attributes
+        // are checked for the existance of a key value pair. If a pair doesn't exist then set the Contact model attribute to null.
         public Contact GetContact(IOrganizationService crmConnection, string id)
         {
 

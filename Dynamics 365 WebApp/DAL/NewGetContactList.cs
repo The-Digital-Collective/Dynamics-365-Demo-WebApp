@@ -10,6 +10,10 @@ namespace Dynamics_365_WebApp.DAL
 {
     public class NewGetContactList
     {
+        // Gets a list of contacts from the contact Entity using the search value and option data. The returned data 
+        // are checked for the existance of a key value pair. If a pair doesn't exist then set the Contact model attribute to null.
+        // The search option is set based in the radio buttion selection on the index form.
+        // The returned data is filtered into a paginated list.
 
         public (List<Contact>, int?, bool, bool) GetListOfContacts(IOrganizationService crmConnection, string searchValue, string searchOption, int? currentPageNumber)
         {
@@ -31,18 +35,24 @@ namespace Dynamics_365_WebApp.DAL
                     ColumnSet = new ColumnSet(allColumns: true),
                     Criteria = new FilterExpression()
                 };
+                
+                // Select search criteria based on the radio button selection.
+                switch (searchOption)
+                {
+                    case "First name": querycontact.Criteria.AddCondition("firstname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
+                        break;
 
-                if (searchOption == "First Name")
-                {
-                    querycontact.Criteria.AddCondition("firstname", ConditionOperator.BeginsWith, searchValue == null? "" : searchValue);
+                    case "Last Name": querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
+                        break;
+
+                    default: querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
+                        break;
                 }
-                else
-                {
-                    querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, searchValue == null? "" : searchValue);
-                }
-                    
+
+                // Use the SDK RetrieveMultiple method to extract a listed of records from Dynamics 365.
                 var contactRecords = crmConnection.RetrieveMultiple(querycontact);
                 
+                // Build the list of contact (model) records
                 foreach (var a in contactRecords.Entities)
                 {
  
@@ -55,6 +65,8 @@ namespace Dynamics_365_WebApp.DAL
                                                 a.Attributes.ContainsKey("new_chosenreference") ? a.Attributes["new_chosenreference"].ToString() : null));
                 }
 
+                // Determine if there are previous and next page options in the list and generate a paginated list
+                // skipping over pages already viewed - calculated based on page number. 
                 var totalPages = (int)Math.Ceiling(contactList.Count / (double)pageSize);
                 var sortedContactList = contactList.OrderBy(x => x.LastName).ToList();
                 hasPreviouPage = (PageNumber > 0) ? true : false;
