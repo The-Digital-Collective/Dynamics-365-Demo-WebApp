@@ -8,18 +8,18 @@ namespace Dynamics_365_WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index(string option, string search, int? currentPageNumber)
+        public ActionResult Index(string searchOption, string searchValue, int? currentPageNumber)
         {
-            // Connects to Dynamics 365 and gets a list of contacts using the search data and option (last name or first name)
-            // from the search function on the index page.
-            // A sorted paginated list is returned, along with boolian values for next and previous pages 
-            // calculated based on number of current position and record count in the paginated list. 
+            // Connects to Dynamics 365 and gets a list of contacts using the search data and option values
+            // from the search function on the index page. A sorted paginated list is returned, along with 
+            // boolian states for next and previous pages. These states are calculated based on number of 
+            // pages and the current position in the paginated list. 
 
             var (crmConnection, service) = new DynamicsConnection().ConnectToDynamics();
-            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new NewGetContactList().GetListOfContacts(crmConnection, search, option, currentPageNumber);
+            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new GetContactList().GetListOfContacts(crmConnection, searchValue, searchOption, currentPageNumber);
 
             // Save values for use on the index page.
-            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null);
+            MyViewData.SetData(service, searchOption, searchValue, nextPageNumber, hasPreviousPage, hasNextPage, null);
             
             return View(paginatedContactList);
         }
