@@ -7,9 +7,9 @@ using System.Web;
 
 namespace Dynamics_365_WebApp.BLL
 {
-    public class Pagination
+    public class PaginateContactList
     {
-        public (List<Contact>, int?, bool, bool) CreatePageList(List<Contact> contactList, int? currentPageNumber)
+        public (List<Contact>, int?, bool, bool) CreatePaginatedList(List<Contact> contactList, int? currentPageNumber)
         {
             var pageSize = int.Parse(ConfigurationManager.AppSettings["PageZize"]);
             var PageNumber = (currentPageNumber == null) ? 0 : currentPageNumber;

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Dynamics_365_WebApp.BLL
 {
-    public class ContactList
+    public class GetDynamicsContacts
     {
         public List<Contact> GetContactList(EntityCollection contactRecords)
         {

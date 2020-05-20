@@ -151,14 +151,14 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="BLL\ContactList.cs" />
-    <Compile Include="BLL\Pagination.cs" />
+    <Compile Include="DAL\GetDynamicsContacts.cs" />
+    <Compile Include="BLL\PaginateContactList.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="BLL\ContactEntityQuery.cs" />
+    <Compile Include="BLL\CreateContactQuery.cs" />
     <Compile Include="DAL\CreateContact.cs" />
-    <Compile Include="DAL\DynamicsConnection.cs" />
+    <Compile Include="DAL\CreateDynamicsConnection.cs" />
     <Compile Include="DAL\NewGetContact.cs" />
-    <Compile Include="DAL\GetContactList.cs" />
+    <Compile Include="BLL\GetContactList.cs" />
     <Compile Include="DAL\UpdateContact.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

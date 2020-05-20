@@ -12,20 +12,16 @@ namespace Dynamics_365_WebApp.DAL
         // The search option is set based in the radio buttion selection on the index form.
         // The returned data is filtered into a paginated list.
 
-        // Note: how to extract the attribute name used in the search
-        // to be used in unit testing later. 
-        // var data = queryContact.Criteria.Conditions.ToArray()[0].AttributeName;
-
         public (List<Contact>, int?, bool, bool) GetListOfContacts(IOrganizationService crmConnection, string searchValue, string searchOption, int? currentPageNumber)
         {
             
-            var queryContact = new ContactEntityQuery().GetContactQueryExpression(searchOption, searchValue);
+            var queryContact = new CreateContactQuery().BuildContactQueryExpression(searchOption, searchValue);
 
             var contactRecords = crmConnection.RetrieveMultiple(queryContact);
 
-            var contactList = new ContactList().GetContactList(contactRecords);
+            var contactList = new GetDynamicsContacts().GetContactList(contactRecords);
 
-            return (new Pagination().CreatePageList(contactList, currentPageNumber));
+            return (new PaginateContactList().CreatePaginatedList(contactList, currentPageNumber));
         }
 
     }

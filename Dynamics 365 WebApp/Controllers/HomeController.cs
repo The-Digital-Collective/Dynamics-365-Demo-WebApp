@@ -15,7 +15,7 @@ namespace Dynamics_365_WebApp.Controllers
             // boolian states for next and previous pages. These states are calculated based on number of 
             // pages and the current position in the paginated list. 
 
-            var (crmConnection, service) = new DynamicsConnection().ConnectToDynamics();
+            var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new GetContactList().GetListOfContacts(crmConnection, searchValue, searchOption, currentPageNumber);
 
             // Save values for use on the index page.
@@ -27,7 +27,7 @@ namespace Dynamics_365_WebApp.Controllers
         public ActionResult Create(string option, string search, int? currentPageNumber)
         {
             // Verifies the connection to Dynamics 365 and sets values for use on the index page.
-            var (_, service) = new DynamicsConnection().ConnectToDynamics();
+            var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
 
             // Save values for use on the index page.
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
@@ -39,7 +39,7 @@ namespace Dynamics_365_WebApp.Controllers
         public ActionResult Create(Contact newContact, string search, string option, int? currentPageNumber)
         {
             // Verifies the connection and adds the newContact data to the Dynamics 365 contact entity. 
-            var (_, service) = new DynamicsConnection().ConnectToDynamics();
+            var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var success = new CreateContact().AddContactToDynamics(newContact, service);
 
             // Save values for use on the index page.
@@ -65,7 +65,7 @@ namespace Dynamics_365_WebApp.Controllers
         {
             // Verifies the connection and if the connection is okay then delete the record from the contact entity
             // using the contact entity unique identifier (contactid) passed as id. Then redirect to the index method.
-            var (_, service) = new DynamicsConnection().ConnectToDynamics();
+            var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
             Entity contact = new Entity("contact");
 
             if (service != null)
@@ -79,7 +79,7 @@ namespace Dynamics_365_WebApp.Controllers
         public ActionResult EditContact(string id, string search, string option, int? currentPageNumber)
         {
             // Verifies the connection and gets the record identified by 'id' from the contact entity.
-            var (crmConnection, service) = new DynamicsConnection().ConnectToDynamics();
+            var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var updateContact = new NewGetContact().GetContact(crmConnection, id);
 
             // Save values for use on the index page.
@@ -94,7 +94,7 @@ namespace Dynamics_365_WebApp.Controllers
             // Verifies the connection and calls the update function to update the record in
             // the Dynamics 365 contact entity. Then, if successful, redirect to the Index method, otherwise
             // display an update failed message in the edit view. 
-            var (_, service) = new DynamicsConnection().ConnectToDynamics();
+            var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var success = new UpdateContact().UpdateContactData(service, updatedContact);
 
             // Save values for use on the index page.

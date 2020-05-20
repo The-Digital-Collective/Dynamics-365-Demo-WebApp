@@ -6,9 +6,9 @@ using System.Web;
 
 namespace Dynamics_365_WebApp.DAL
 {
-    public class ContactEntityQuery
+    public class CreateContactQuery
     {
-        public QueryExpression GetContactQueryExpression(string searchOption, string searchValue)
+        public QueryExpression BuildContactQueryExpression(string searchOption, string searchValue)
         {
             var querycontact = new QueryExpression()
             {
