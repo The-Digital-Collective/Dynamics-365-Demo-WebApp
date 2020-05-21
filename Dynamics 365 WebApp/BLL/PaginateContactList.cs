@@ -9,9 +9,8 @@ namespace Dynamics_365_WebApp.BLL
 {
     public class PaginateContactList
     {
-        public (List<Contact>, int?, bool, bool) CreatePaginatedList(List<Contact> contactList, int? currentPageNumber)
+        public (List<Contact>, int?, bool, bool) CreatePaginatedList(List<Contact> contactList, int? currentPageNumber, int pageSize)
         {
-            var pageSize = int.Parse(ConfigurationManager.AppSettings["PageZize"]);
             var PageNumber = (currentPageNumber == null) ? 0 : currentPageNumber;
             var totalPages = (int)Math.Ceiling(contactList.Count / (double)pageSize);
             var sortedContactList = contactList.OrderBy(x => x.LastName).ToList();
