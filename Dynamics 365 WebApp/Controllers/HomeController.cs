@@ -8,7 +8,7 @@ namespace Dynamics_365_WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index(string searchOption, string searchValue, int? currentPageNumber)
+        public ActionResult Index(string option, string search, int? currentPageNumber)
         {
             // Connects to Dynamics 365 and gets a list of contacts using the search data and option values
             // from the search function on the index page. A sorted paginated list is returned, along with 
@@ -16,10 +16,10 @@ namespace Dynamics_365_WebApp.Controllers
             // pages and the current position in the paginated list. 
 
             var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
-            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new GetContactList().GetListOfContacts(crmConnection, searchValue, searchOption, currentPageNumber);
+            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new GetContactList().GetListOfContacts(crmConnection, search, option, currentPageNumber);
 
             // Save values for use on the index page.
-            MyViewData.SetData(service, searchOption, searchValue, nextPageNumber, hasPreviousPage, hasNextPage, null);
+            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null);
             
             return View(paginatedContactList);
         }
@@ -40,7 +40,7 @@ namespace Dynamics_365_WebApp.Controllers
         {
             // Verifies the connection and adds the newContact data to the Dynamics 365 contact entity. 
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
-            var success = new CreateContact().AddContactToDynamics(newContact, service);
+            var success = new CreateDynamicsContact().AddContactToDynamics(newContact, service);
 
             // Save values for use on the index page.
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
@@ -95,7 +95,7 @@ namespace Dynamics_365_WebApp.Controllers
             // the Dynamics 365 contact entity. Then, if successful, redirect to the Index method, otherwise
             // display an update failed message in the edit view. 
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
-            var success = new UpdateContact().UpdateContactData(service, updatedContact);
+            var success = new UpdateDynamicsContact().UpdateContactData(service, updatedContact);
 
             // Save values for use on the index page.
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);

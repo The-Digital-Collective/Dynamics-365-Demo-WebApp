@@ -4,7 +4,7 @@ using Microsoft.Xrm.Sdk;
 
 namespace Dynamics_365_WebApp.DAL
 {
-    public class CreateContact
+    public class CreateDynamicsContact
     {
         // Insert the newContact record into the Dynamics 365 contact entity. 
         // Dynamics entities hold attributes as key value pairs, so for each attribute in 

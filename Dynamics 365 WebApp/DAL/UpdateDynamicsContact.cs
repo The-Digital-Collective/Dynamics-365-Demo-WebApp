@@ -6,7 +6,7 @@ using System;
 
 namespace Dynamics_365_WebApp.DAL
 {
-    public class UpdateContact
+    public class UpdateDynamicsContact
     {
         // Update the Dynamics 365 contact entity with the data in updateContact. Dynamics entities 
         // hold attributes as key value pairs, so for each attribute in updateContact, if there is a 

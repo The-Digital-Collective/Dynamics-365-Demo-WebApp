@@ -155,11 +155,11 @@
     <Compile Include="BLL\PaginateContactList.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="BLL\CreateContactQuery.cs" />
-    <Compile Include="DAL\CreateContact.cs" />
+    <Compile Include="DAL\CreateDynamicsContact.cs" />
     <Compile Include="DAL\CreateDynamicsConnection.cs" />
     <Compile Include="DAL\NewGetContact.cs" />
     <Compile Include="BLL\GetContactList.cs" />
-    <Compile Include="DAL\UpdateContact.cs" />
+    <Compile Include="DAL\UpdateDynamicsContact.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
