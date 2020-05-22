@@ -3,6 +3,8 @@ using System.Web.Mvc;
 using Dynamics_365_WebApp.Models;
 using Microsoft.Xrm.Sdk;
 using System;
+using Dynamics_365_WebApp.BLL;
+using System.Configuration;
 
 namespace Dynamics_365_WebApp.Controllers
 {
@@ -16,11 +18,15 @@ namespace Dynamics_365_WebApp.Controllers
             // pages and the current position in the paginated list. 
 
             var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
-            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new GetContactList().GetListOfContacts(crmConnection, search, option, currentPageNumber);
-
-            // Save values for use on the index page.
-            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null);
+            var pageSize = int.Parse(ConfigurationManager.AppSettings["PageSize"]);
             
+            var queryContact = new CreateContactQuery().BuildContactQueryExpression(option, search);
+            var contactRecords = crmConnection.RetrieveMultiple(queryContact);
+            var contactList = new GetDynamicsContacts().GetContactList(contactRecords);
+
+            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList().CreatePaginatedList(contactList, currentPageNumber, pageSize);
+
+            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null);           
             return View(paginatedContactList);
         }
 
@@ -29,9 +35,7 @@ namespace Dynamics_365_WebApp.Controllers
             // Verifies the connection to Dynamics 365 and sets values for use on the index page.
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
 
-            // Save values for use on the index page.
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
-            
             return View();
         }
 
@@ -55,8 +59,7 @@ namespace Dynamics_365_WebApp.Controllers
             }
             else
             {
-                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "New record creation failed.");
-                
+                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "New record creation failed.");           
                 return View();
             }
         }
@@ -82,9 +85,7 @@ namespace Dynamics_365_WebApp.Controllers
             var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var updateContact = new GetDynamicsContact().GetContact(crmConnection, id);
 
-            // Save values for use on the index page.
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
-
             return View(updateContact);
         }
 
@@ -97,7 +98,6 @@ namespace Dynamics_365_WebApp.Controllers
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var success = new UpdateDynamicsContact().UpdateContactData(service, updatedContact);
 
-            // Save values for use on the index page.
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
             
             if (success)
@@ -108,7 +108,6 @@ namespace Dynamics_365_WebApp.Controllers
             else
             {
                 MyViewData.SetData(service, option, search, currentPageNumber, null, null, "Record update failed.");
-
                 return View();
             }
         }
