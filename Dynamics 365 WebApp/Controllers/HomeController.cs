@@ -80,7 +80,7 @@ namespace Dynamics_365_WebApp.Controllers
         {
             // Verifies the connection and gets the record identified by 'id' from the contact entity.
             var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
-            var updateContact = new NewGetContact().GetContact(crmConnection, id);
+            var updateContact = new GetDynamicsContact().GetContact(crmConnection, id);
 
             // Save values for use on the index page.
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);

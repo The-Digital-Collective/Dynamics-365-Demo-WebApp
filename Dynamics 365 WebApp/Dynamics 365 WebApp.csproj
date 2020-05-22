@@ -157,7 +157,7 @@
     <Compile Include="BLL\CreateContactQuery.cs" />
     <Compile Include="DAL\CreateDynamicsContact.cs" />
     <Compile Include="DAL\CreateDynamicsConnection.cs" />
-    <Compile Include="DAL\NewGetContact.cs" />
+    <Compile Include="DAL\GetDynamicsContact.cs" />
     <Compile Include="BLL\GetContactList.cs" />
     <Compile Include="DAL\UpdateDynamicsContact.cs" />
     <Compile Include="Global.asax.cs">
