@@ -5,6 +5,7 @@ using Microsoft.Xrm.Sdk;
 using System;
 using Dynamics_365_WebApp.BLL;
 using System.Configuration;
+using System.Linq;
 
 namespace Dynamics_365_WebApp.Controllers
 {
@@ -15,7 +16,7 @@ namespace Dynamics_365_WebApp.Controllers
             // Connects to Dynamics 365 and gets a list of contacts using the search data and option values
             // from the search function on the index page. A sorted paginated list is returned, along with 
             // boolian states for next and previous pages. These states are calculated based on number of 
-            // pages and the current position in the paginated list. 
+            // pages and the current page position in the list. 
 
             var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var pageSize = int.Parse(ConfigurationManager.AppSettings["PageSize"]);
@@ -24,7 +25,8 @@ namespace Dynamics_365_WebApp.Controllers
             var contactRecords = crmConnection.RetrieveMultiple(queryContact);
             var contactList = new GetDynamicsContacts().GetContactList(contactRecords);
 
-            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList().CreatePaginatedList(contactList, currentPageNumber, pageSize);
+            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList(new BLL.FeatureSwitch().CheckPaginationFeatureAllowed())
+                .CreatePaginatedList(contactList, currentPageNumber, pageSize);
 
             MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null);           
             return View(paginatedContactList);
