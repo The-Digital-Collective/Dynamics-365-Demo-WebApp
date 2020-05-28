@@ -5,7 +5,6 @@ using Microsoft.Xrm.Sdk;
 using System;
 using Dynamics_365_WebApp.BLL;
 using System.Configuration;
-using System.Linq;
 
 namespace Dynamics_365_WebApp.Controllers
 {
@@ -24,11 +23,13 @@ namespace Dynamics_365_WebApp.Controllers
             var queryContact = new CreateContactQuery().BuildContactQueryExpression(option, search);
             var contactRecords = crmConnection.RetrieveMultiple(queryContact);
             var contactList = new GetDynamicsContacts().GetContactList(contactRecords);
+            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
-            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList(new BLL.FeatureSwitch().CheckPaginationFeatureAllowed())
+            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList(paginationEnabled)
                 .CreatePaginatedList(contactList, currentPageNumber, pageSize);
 
-            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null);           
+            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null, paginationEnabled, searchBoxEnabled);           
             return View(paginatedContactList);
         }
 
@@ -36,8 +37,10 @@ namespace Dynamics_365_WebApp.Controllers
         {
             // Verifies the connection to Dynamics 365 and sets values for use on the index page.
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
+            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
-            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
+            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationEnabled, searchBoxEnabled);
             return View();
         }
 
@@ -47,9 +50,11 @@ namespace Dynamics_365_WebApp.Controllers
             // Verifies the connection and adds the newContact data to the Dynamics 365 contact entity. 
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var success = new CreateDynamicsContact().AddContactToDynamics(newContact, service);
+            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
             // Save values for use on the index page.
-            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
+            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationEnabled, searchBoxEnabled);
 
             // If the contact entity record creation was successful then set the page number to the current page
             // and, if successful, redirect to the Index method. Otherwise display a record creation failed message
@@ -61,7 +66,7 @@ namespace Dynamics_365_WebApp.Controllers
             }
             else
             {
-                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "New record creation failed.");           
+                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "New record creation failed.", paginationEnabled, searchBoxEnabled);           
                 return View();
             }
         }
@@ -86,8 +91,10 @@ namespace Dynamics_365_WebApp.Controllers
             // Verifies the connection and gets the record identified by 'id' from the contact entity.
             var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var updateContact = new GetDynamicsContact().GetContact(crmConnection, id);
+            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
-            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
+            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationEnabled, searchBoxEnabled);
             return View(updateContact);
         }
 
@@ -99,8 +106,10 @@ namespace Dynamics_365_WebApp.Controllers
             // display an update failed message in the edit view. 
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var success = new UpdateDynamicsContact().UpdateContactData(service, updatedContact);
+            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
-            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null);
+            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationEnabled, searchBoxEnabled);
             
             if (success)
             {
@@ -109,7 +118,7 @@ namespace Dynamics_365_WebApp.Controllers
             }
             else
             {
-                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "Record update failed.");
+                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "Record update failed.", paginationEnabled, searchBoxEnabled);
                 return View();
             }
         }

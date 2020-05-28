@@ -24,5 +24,22 @@ namespace Dynamics_365_WebApp.BLL
 
             return paginationSwitch;
         }
+
+        public bool CheckSearchBoxFeatureAllowed()
+        {
+            bool searchBoxSwitch = false;
+
+            using (var db = new FeatureSwitchesEntities())
+            {
+                var query = from b in db.FeatureSwitches select b;
+
+                foreach (var item in query)
+                {
+                    searchBoxSwitch = item.SearchBox;
+                }
+            }
+
+            return searchBoxSwitch;
+        }
     }
 }

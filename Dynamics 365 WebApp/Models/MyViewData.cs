@@ -17,8 +17,10 @@ namespace Dynamics_365_WebApp.Models
         public static bool? HasPreviousPage;
         public static bool? HasNextPage;
         public static string Message;
+        public static bool? PaginationFeature;
+        public static bool? SearchBoxFeatureSwitch;
            
-        public static void SetData(IOrganizationService service, string option, string search, int? pageNumber, bool? hasPreviousPage, bool? hasNextPage, string message)
+        public static void SetData(IOrganizationService service, string option, string search, int? pageNumber, bool? hasPreviousPage, bool? hasNextPage, string message, bool? paginationFeature, bool? searchBoxFeatureSwitch)
         {
             CrmConnection = (service != null) ? true : false;
             RadioButtonSelected = (option == null) ? "Last Name" : option;
@@ -27,6 +29,8 @@ namespace Dynamics_365_WebApp.Models
             if (hasPreviousPage != null) HasPreviousPage = hasPreviousPage;
             if (hasNextPage != null) HasNextPage = hasNextPage;
             if (message != null) Message = message;
+            PaginationFeature = paginationFeature;
+            SearchBoxFeatureSwitch = searchBoxFeatureSwitch;
         }
     }
 }

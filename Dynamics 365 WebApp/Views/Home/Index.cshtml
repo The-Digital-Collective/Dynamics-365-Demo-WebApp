@@ -13,7 +13,7 @@
             <br />
             This is a demo application that connects to a cloud instance of Dynamics 365 and
             perfoirms CRUD operations on data in the Contact entity.
-         </p>
+        </p>
 
         <p>
             <br />
@@ -30,16 +30,8 @@
 
 @using (Html.BeginForm("Index", "Home", FormMethod.Get))
 {
-    <p>
-        <br />
-    </p>
 
-    <b> Search Option:</b> @Html.RadioButton("option", "Last Name", MyViewData.RadioButtonSelected == "Last Name" ? true : false) <text>Last Name</text>
-    @Html.RadioButton("option", "First Name", MyViewData.RadioButtonSelected == "First Name" ? true : false) <text> First Name </text>
-
-    @Html.TextBox("search")
-    <input type="submit" name="submit" value="Search" />
-
+        @Html.Partial("_SearchBox")
     <p>
         <br />
     </p>
@@ -102,10 +94,4 @@
 
 </table>
 
-@{
-    var prevDisabled = (bool)!MyViewData.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = (bool)!MyViewData.HasNextPage ? "disabled" : "";
-}
-
-<a href="@Url.Action("Index", new { search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber - 2})" class="btn btn-default @prevDisabled" role="button">Previous</a>
-<a href="@Url.Action("Index", new { search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber })" class="btn btn-default @nextDisabled" role="button">Next</a>
+@Html.Partial("_NextPreviousButtons")

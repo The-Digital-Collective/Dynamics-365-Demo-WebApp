@@ -1,0 +1,17 @@
+﻿@using Dynamics_365_WebApp.Models
+
+@{
+    var prevDisabled = (bool)!MyViewData.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = (bool)!MyViewData.HasNextPage ? "disabled" : "";
+    var paginationOn = (bool) MyViewData.PaginationFeature;
+}
+
+@if (paginationOn)
+{
+    <a href="@Url.Action("Index", new { search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber - 2})" class="btn btn-default @prevDisabled" role="button">Previous</a>
+    <a href="@Url.Action("Index", new { search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber })" class="btn btn-default @nextDisabled" role="button">Next</a>
+}
+else
+{
+    <b></b>
+}
