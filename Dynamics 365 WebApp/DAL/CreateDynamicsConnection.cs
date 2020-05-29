@@ -13,7 +13,7 @@ namespace Dynamics_365_WebApp.DAL
     /// Creates the endpoint connection string from valuse contained in Web.config appSettings
     /// and implements an authenticated connection to the Dynamics endpoint
     /// </summary>
-    public class DynamicsConnection
+    public class CreateDynamicsConnection
     {
         public (IOrganizationService, IOrganizationService) ConnectToDynamics()
         {

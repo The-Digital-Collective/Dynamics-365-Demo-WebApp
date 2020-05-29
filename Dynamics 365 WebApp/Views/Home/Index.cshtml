@@ -1,8 +1,11 @@
 ﻿@model IEnumerable<Dynamics_365_WebApp.Models.Contact>
+@using Dynamics_365_WebApp.Models
+
 
 @{
     ViewBag.Title = "Home Page";
 }
+
 
 <div class="row">
     <div class="col-md-8">
@@ -11,19 +14,31 @@
             This is a demo application that connects to a cloud instance of Dynamics 365 and
             perfoirms CRUD operations on data in the Contact entity.
         </p>
+
         <p>
             <br />
             Click the button below for more information
             on the Dynamics 365 Contact entity
         </p>
-        <p><a class="btn btn-default" href="https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/contact" target="_blank">Dynamics Contact Entity Reference &raquo;</a></p>
         <p>
-            <br />
+            <a class="btn btn-default" href="https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/contact" target="_blank">
+                Dynamics Contact Entity Reference &raquo;
+            </a>
         </p>
     </div>
 </div>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+
+        @Html.Partial("_SearchBox")
+    <p>
+        <br />
+    </p>
+}
+
 <p>
-    @Html.ActionLink("Create New Contact", "Create")
+    @Html.ActionLink("Create New Contact", "Create", new { search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber })
 </p>
 
 <table class="table">
@@ -71,10 +86,12 @@
                 @Html.DisplayFor(modelItem => item.ChosenReference)
             </td>
             <td>
-                @Html.ActionLink("Edit", "EditContact", new { id = item.ContactId }) |
-                @Html.ActionLink("Delete", "DeleteContact", new { id = item.ContactId }, new { onclick = "return confirm('Are sure wants to delete this record?');" })
+                @Html.ActionLink("Edit", "EditContact", new { id = item.ContactId, search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber }) |
+                @Html.ActionLink("Delete", "DeleteContact", new { id = item.ContactId, search = MyViewData.Search, option = MyViewData.RadioButtonSelected, currentPageNumber = MyViewData.PageNumber }, new { onclick = "return confirm('Are sure wants to delete this record?');" })
             </td>
         </tr>
     }
 
 </table>
+
+@Html.Partial("_NextPreviousButtons")

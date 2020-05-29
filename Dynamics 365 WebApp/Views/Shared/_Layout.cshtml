@@ -21,8 +21,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                </ul>
-                @Html.Partial("_ConnectionPartial")
+                </ul>            
             </div>
         </div>
     </div>
@@ -30,7 +29,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - www.worldvision.org.uk</p>
+            <b>@Html.Partial("_ConnectionPartial")</b>
         </footer>
     </div>
 

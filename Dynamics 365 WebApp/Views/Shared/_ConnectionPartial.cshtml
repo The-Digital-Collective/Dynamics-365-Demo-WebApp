@@ -1,21 +1,15 @@
-﻿@if ((bool) ViewData["crmConnection"])
+﻿@using Dynamics_365_WebApp.Models
+
+@if (MyViewData.CrmConnection)
 {
     <text>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="navbar-text">
-                Connected to Dynamics
-            </li>
-        </ul>
+       Connected to Dynamics 365
     </text>
 }
 else
 {
     <text>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="navbar-text">
-                Not connected to Dynamics
-            </li>
-        </ul>
+       Not connected to Dynamics 365
     </text>
 }
 
