@@ -23,13 +23,15 @@ namespace Dynamics_365_WebApp.Controllers
             var queryContact = new CreateContactQuery().BuildContactQueryExpression(option, search);
             var contactRecords = crmConnection.RetrieveMultiple(queryContact);
             var contactList = new GetDynamicsContacts().GetContactList(contactRecords);
-            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
-            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
-            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList(paginationEnabled)
+            // Set the pagination and search feature switches
+            var paginationFeatureSwitch = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
+
+            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList(paginationFeatureSwitch)
                 .CreatePaginatedList(contactList, currentPageNumber, pageSize);
 
-            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null, paginationEnabled, searchBoxEnabled);           
+            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null, paginationFeatureSwitch, searchBoxFeatureSwitch);           
             return View(paginatedContactList);
         }
 
@@ -37,10 +39,12 @@ namespace Dynamics_365_WebApp.Controllers
         {
             // Verifies the connection to Dynamics 365 and sets values for use on the index page.
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
-            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
-            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
-            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationEnabled, searchBoxEnabled);
+            // Set the pagination and search feature switches
+            var paginationFeatureSwitch = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
+
+            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
             return View();
         }
 
@@ -49,24 +53,27 @@ namespace Dynamics_365_WebApp.Controllers
         {
             // Verifies the connection and adds the newContact data to the Dynamics 365 contact entity. 
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
-            var success = new CreateDynamicsContact().AddContactToDynamics(newContact, service);
-            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
-            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
-            // Save values for use on the index page.
-            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationEnabled, searchBoxEnabled);
+            // Set the pagination and search feature switches
+            var paginationFeatureSwitch = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
             // If the contact entity record creation was successful then set the page number to the current page
             // and, if successful, redirect to the Index method. Otherwise display a record creation failed message
             // on the current view
+
+            var success = new CreateDynamicsContact().AddContactToDynamics(newContact, service);
+
             if (success)
             {
+
+                MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
                 var pageNumber = (currentPageNumber > 0) ? currentPageNumber - 1 : null;
                 return RedirectToAction("Index", new { option = option, search = search, currentPageNumber = pageNumber });
             }
             else
             {
-                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "New record creation failed.", paginationEnabled, searchBoxEnabled);           
+                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "New record creation failed.", paginationFeatureSwitch, searchBoxFeatureSwitch);           
                 return View();
             }
         }
@@ -82,6 +89,7 @@ namespace Dynamics_365_WebApp.Controllers
             {
                 service.Delete(contact.LogicalName, Guid.Parse(id));
             }
+            
             var pageNumber = (currentPageNumber > 0) ? currentPageNumber - 1 : null;
             return RedirectToAction("Index", new { option = option, search = search, currentPageNumber = pageNumber });
         }
@@ -91,10 +99,12 @@ namespace Dynamics_365_WebApp.Controllers
             // Verifies the connection and gets the record identified by 'id' from the contact entity.
             var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var updateContact = new GetDynamicsContact().GetContact(crmConnection, id);
-            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
-            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
 
-            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationEnabled, searchBoxEnabled);
+            // Set the pagination and search feature switches
+            var paginationFeatureSwitch = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
+
+            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
             return View(updateContact);
         }
 
@@ -105,20 +115,22 @@ namespace Dynamics_365_WebApp.Controllers
             // the Dynamics 365 contact entity. Then, if successful, redirect to the Index method, otherwise
             // display an update failed message in the edit view. 
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
-            var success = new UpdateDynamicsContact().UpdateContactData(service, updatedContact);
-            var paginationEnabled = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
-            var searchBoxEnabled = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
-
-            MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationEnabled, searchBoxEnabled);
             
+            // Set the pagination and search feature switches
+            var paginationFeatureSwitch = new BLL.FeatureSwitch().CheckPaginationFeatureAllowed();
+            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().CheckSearchBoxFeatureAllowed();
+
+            var success = new UpdateDynamicsContact().UpdateContactData(service, updatedContact);
+
             if (success)
             {
                 var pageNumber = (currentPageNumber > 0) ? currentPageNumber - 1 : null;
+                MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
                 return RedirectToAction("Index", new {option = option, search = search, currentPageNumber = pageNumber });
             }
             else
             {
-                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "Record update failed.", paginationEnabled, searchBoxEnabled);
+                MyViewData.SetData(service, option, search, currentPageNumber, null, null, "Record update failed.", paginationFeatureSwitch, searchBoxFeatureSwitch);
                 return View();
             }
         }

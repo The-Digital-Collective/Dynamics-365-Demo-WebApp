@@ -36,7 +36,7 @@ namespace Dynamics_365_WebApp.BLL
             }
             else
             {
-                return (sortedContactList, null, null, null);
+                return (sortedContactList, null, false, false);
             }
         }
     }
