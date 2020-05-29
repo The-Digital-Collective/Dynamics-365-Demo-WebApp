@@ -146,8 +146,8 @@ namespace UnitTests.Paginate
             (sortedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed())
                 .CreatePaginatedList(contactList, pageNumber, pageSize);
 
-            Assert.IsTrue(hasNextPage == null);
-            Assert.IsTrue(hasPreviousPage == null);
+            Assert.IsTrue(hasNextPage == false);
+            Assert.IsTrue(hasPreviousPage == false);
             Assert.AreEqual(nextPageNumber, null);
             Assert.AreEqual(sortedContactList.Count, recordCount);
         }
