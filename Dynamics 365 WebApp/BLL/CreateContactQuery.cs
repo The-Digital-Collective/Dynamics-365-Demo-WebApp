@@ -1,35 +1,47 @@
 ﻿using Microsoft.Xrm.Sdk.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Configuration;
+
 
 namespace Dynamics_365_WebApp.DAL
 {
     public class CreateContactQuery
     {
-        public QueryExpression BuildContactQueryExpression(string searchOption, string searchValue)
+        private string _searchOption;
+        private string _searchValue;
+
+        public CreateContactQuery()
+        {
+
+        }
+
+        public CreateContactQuery(string searchOption, string searchvalue)
+        {
+            _searchOption = searchOption;
+            _searchValue = searchvalue;
+
+        }
+        public QueryExpression BuildContactQueryExpression()
         {
             var querycontact = new QueryExpression()
             {
-                EntityName = "contact",
+                EntityName = ConfigurationManager.AppSettings["EntityName"].ToString(),
                 ColumnSet = new ColumnSet(allColumns: true),
                 Criteria = new FilterExpression()
             };
 
             // Select search criteria based on the radio button selection and create the query.
-            switch (searchOption)
+            switch (_searchOption)
             {
                 case "First Name":
-                    querycontact.Criteria.AddCondition("firstname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
+                    querycontact.Criteria.AddCondition("firstname", ConditionOperator.BeginsWith, _searchValue == null ? "" : _searchValue);
                     break;
 
                 case "Last Name":
-                    querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
+                    querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, _searchValue == null ? "" : _searchValue);
                     break;
 
                 default:
-                    querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, searchValue == null ? "" : searchValue);
+                    querycontact.Criteria.AddCondition("lastname", ConditionOperator.BeginsWith, _searchValue == null ? "" : _searchValue);
                     break;
             }
 

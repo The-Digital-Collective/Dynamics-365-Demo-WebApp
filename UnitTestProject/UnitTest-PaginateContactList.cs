@@ -34,8 +34,9 @@ namespace UnitTests.Paginate
             }
 
 
-            (sortedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed())
-                .CreatePaginatedList(contactList, pageNumber, pageSize);
+            (sortedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = 
+                new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed(), contactList, pageNumber, pageSize)
+                .CreatePaginatedList();
 
             Assert.IsTrue(hasNextPage == false);
             Assert.IsTrue(hasPreviousPage == false);
@@ -63,8 +64,9 @@ namespace UnitTests.Paginate
             }
 
 
-            (_, _, hasPreviousPage, hasNextPage) = new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed())
-                .CreatePaginatedList(contactList, pageNumber, pageSize);
+            (_, _, hasPreviousPage, hasNextPage) = 
+                new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed(), contactList, pageNumber, pageSize)
+                .CreatePaginatedList();
 
             Assert.IsTrue(hasNextPage == false);
             Assert.IsTrue(hasPreviousPage == true);
@@ -90,7 +92,9 @@ namespace UnitTests.Paginate
             }
 
 
-            (_, _, hasPreviousPage, hasNextPage) = new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed()).CreatePaginatedList(contactList, pageNumber, pageSize);
+            (_, _, hasPreviousPage, hasNextPage) = 
+                new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed(), contactList, pageNumber, pageSize).
+                CreatePaginatedList();
 
             Assert.IsTrue(hasNextPage == true);
             Assert.IsTrue(hasPreviousPage == false);
@@ -116,7 +120,9 @@ namespace UnitTests.Paginate
             }
 
 
-            (sortedContactList, _, _, _) = new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed()).CreatePaginatedList(contactList, pageNumber, pageSize);
+            (sortedContactList, _, _, _) = 
+                new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed(), contactList, pageNumber, pageSize).
+                CreatePaginatedList();
 
             Assert.AreEqual(sortedContactList.Count, pageSize);
         }
@@ -143,8 +149,9 @@ namespace UnitTests.Paginate
             }
 
 
-            (sortedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed())
-                .CreatePaginatedList(contactList, pageNumber, pageSize);
+            (sortedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = 
+                new PaginateContactList(featureSwitch.Object.CheckPaginationFeatureAllowed(), contactList, pageNumber, pageSize)
+                .CreatePaginatedList();
 
             Assert.IsTrue(hasNextPage == false);
             Assert.IsTrue(hasPreviousPage == false);

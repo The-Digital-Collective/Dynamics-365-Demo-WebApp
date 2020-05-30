@@ -11,24 +11,35 @@ namespace Dynamics_365_WebApp.BLL
     public class PaginateContactList
     {
         private bool _paginateFeature;
-        public PaginateContactList(bool paginateFeature)
+        private List<Contact> _contactList;
+        private int? _currentPageNumber;
+        private int _pageSize;
+        
+        public PaginateContactList()
+        {
+
+        }
+        public PaginateContactList(bool paginateFeature, List<Contact> contactList, int? currentPageNumber, int pageSize)
         {
             _paginateFeature = paginateFeature;
+            _contactList = contactList;
+            _currentPageNumber = currentPageNumber;
+            _pageSize = pageSize;
         }
 
-        public (List<Contact>, int?, bool?, bool?) CreatePaginatedList(List<Contact> contactList, int? currentPageNumber, int pageSize)
+        public (List<Contact>, int?, bool?, bool?) CreatePaginatedList()
         {
-            var sortedContactList = contactList.OrderBy(x => x.LastName).ToList();
+            var sortedContactList = _contactList.OrderBy(x => x.LastName).ToList();
 
             if (_paginateFeature)
             {
-                var PageNumber = (currentPageNumber == null) ? 0 : currentPageNumber;
-                var totalPages = (int)Math.Ceiling(contactList.Count / (double)pageSize);
+                var PageNumber = (_currentPageNumber == null) ? 0 : _currentPageNumber;
+                var totalPages = (int)Math.Ceiling(_contactList.Count / (double)_pageSize);
 
                 var hasPreviouPage = (PageNumber > 0) ? true : false;
                 var hasNextPage = ((PageNumber + 1) < totalPages) ? true : false;
 
-                var paginatedContactList = (PageNumber <= totalPages) ? sortedContactList.Skip((int)PageNumber * pageSize).Take(pageSize).ToList() : null;
+                var paginatedContactList = (PageNumber <= totalPages) ? sortedContactList.Skip((int)PageNumber * _pageSize).Take(_pageSize).ToList() : null;
 
                 PageNumber++;
 
