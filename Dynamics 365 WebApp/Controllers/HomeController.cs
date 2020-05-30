@@ -20,7 +20,8 @@ namespace Dynamics_365_WebApp.Controllers
             var (crmConnection, service) = new CreateDynamicsConnection().ConnectToDynamics();
             var pageSize = int.Parse(ConfigurationManager.AppSettings["PageSize"]);
 
-            var queryExpression = new CreateContactQuery(option, search).
+            var entityName = ConfigurationManager.AppSettings["EntityName"].ToString();
+            var queryExpression = new CreateContactQuery(option, search, entityName).
                 BuildContactQueryExpression(); 
            
             var contactRecords = crmConnection.RetrieveMultiple(queryExpression);

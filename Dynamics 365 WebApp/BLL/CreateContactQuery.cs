@@ -8,23 +8,24 @@ namespace Dynamics_365_WebApp.DAL
     {
         private string _searchOption;
         private string _searchValue;
+        private string _entityName;
 
         public CreateContactQuery()
         {
 
         }
 
-        public CreateContactQuery(string searchOption, string searchvalue)
+        public CreateContactQuery(string searchOption, string searchvalue, string entityName)
         {
             _searchOption = searchOption;
             _searchValue = searchvalue;
-
+            _entityName = entityName;
         }
         public QueryExpression BuildContactQueryExpression()
         {
             var querycontact = new QueryExpression()
             {
-                EntityName = ConfigurationManager.AppSettings["EntityName"].ToString(),
+                EntityName = _entityName,
                 ColumnSet = new ColumnSet(allColumns: true),
                 Criteria = new FilterExpression()
             };
