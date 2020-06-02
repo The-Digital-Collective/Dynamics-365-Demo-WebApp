@@ -14,9 +14,9 @@ namespace Dynamics_365_WebApp.Models
         public static bool? HasNextPage;
         public static string Message;
         public static bool? PaginationFeature;
-        public static bool? SearchBoxFeatureSwitch;
+        public static System.Threading.Tasks.Task<bool> SearchBoxFeatureSwitch;
            
-        public static void SetData(IOrganizationService service, string option, string search, int? pageNumber, bool? hasPreviousPage, bool? hasNextPage, string message, bool? paginationFeature, bool? searchBoxFeatureSwitch)
+        public static void SetData(IOrganizationService service, string option, string search, int? pageNumber, bool? hasPreviousPage, bool? hasNextPage, string message, bool? paginationFeature, System.Threading.Tasks.Task<bool> searchBoxFeatureSwitch)
         {
             CrmConnection = (service != null) ? true : false;
             RadioButtonSelected = (option == null) ? "Last Name" : option;

@@ -1,10 +1,10 @@
 ﻿@using Dynamics_365_WebApp.Models
 
 @{
-    var searchBoxOn = (bool)MyViewData.SearchBoxFeatureSwitch;
+    var searchBoxOn = (System.Threading.Tasks.Task<bool>)MyViewData.SearchBoxFeatureSwitch;
 }
 
-@if (searchBoxOn)
+@if (searchBoxOn.Result)
 {
     <p>
         <br />

@@ -6,6 +6,7 @@ using System;
 using Dynamics_365_WebApp.BLL;
 using System.Configuration;
 
+
 namespace Dynamics_365_WebApp.Controllers
 {
     public class HomeController : Controller
@@ -22,23 +23,26 @@ namespace Dynamics_365_WebApp.Controllers
 
             var entityName = ConfigurationManager.AppSettings["EntityName"].ToString();
             var queryExpression = new CreateContactQuery(option, search, entityName).
-                BuildContactQueryExpression(); 
-           
+                BuildContactQueryExpression();
+
             var contactRecords = crmConnection.RetrieveMultiple(queryExpression);
             var contactList = new GetDynamicsContacts().
                 GetContactList(contactRecords);
 
-            // Set the pagination and search feature switches
+            // Set the pagination feature switches using custom feature database
             var paginationFeatureSwitch = new BLL.FeatureSwitch().
                 CheckPaginationFeatureAllowed();
-            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().
-                CheckSearchBoxFeatureAllowed();
 
-            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) = 
+            //  Set the search box feature switch using Azure feature management
+            var searchBoxFeatureSwitch = new AzureFeatureManager(ConfigurationManager.AppSettings["SearchBox-Feature"].ToString())
+                .GetAzureFeatureFlag();
+
+            var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) =
                 new PaginateContactList(paginationFeatureSwitch, contactList, currentPageNumber, pageSize).
                 CreatePaginatedList();
 
-            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null, paginationFeatureSwitch, searchBoxFeatureSwitch);           
+
+            MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
             return View(paginatedContactList);
         }
 
@@ -50,8 +54,10 @@ namespace Dynamics_365_WebApp.Controllers
             // Set the pagination and search feature switches
             var paginationFeatureSwitch = new BLL.FeatureSwitch().
                 CheckPaginationFeatureAllowed();
-            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().
-                CheckSearchBoxFeatureAllowed();
+
+            //  Set the search box feature switch using Azure feature management
+            var searchBoxFeatureSwitch = new AzureFeatureManager(ConfigurationManager.AppSettings["SearchBox-Feature"].ToString())
+                .GetAzureFeatureFlag();
 
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
             return View();
@@ -67,19 +73,26 @@ namespace Dynamics_365_WebApp.Controllers
             // Set the pagination and search feature switches
             var paginationFeatureSwitch = new BLL.FeatureSwitch().
                 CheckPaginationFeatureAllowed();
-            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().
-                CheckSearchBoxFeatureAllowed();
+            
+            //  Set the search box feature switch using Azure feature management
+            var searchBoxFeatureSwitch = new AzureFeatureManager(ConfigurationManager.AppSettings["SearchBox-Feature"].ToString())
+                .GetAzureFeatureFlag();
+
+            // Call a broken method to test a developer feature switch
+            var incompleteFeature = new IncompleteFeature();
+            incompleteFeature.BrokenlMethod();
+
 
             // If the contact entity record creation was successful then set the page number to the current page
             // and, if successful, redirect to the Index method. Otherwise display a record creation failed message
             // on the current view
-
             var success = new CreateDynamicsContact().
                 AddContactToDynamics(newContact, service);
 
             if (success)
             {
 
+ 
                 MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
                 var pageNumber = (currentPageNumber > 0) ? currentPageNumber - 1 : null;
                 return RedirectToAction("Index", new { option = option, search = search, currentPageNumber = pageNumber });
@@ -120,8 +133,10 @@ namespace Dynamics_365_WebApp.Controllers
             // Set the pagination and search feature switches
             var paginationFeatureSwitch = new BLL.FeatureSwitch().
                 CheckPaginationFeatureAllowed();
-            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().
-                CheckSearchBoxFeatureAllowed();
+            
+            //  Set the search box feature switch using Azure feature management
+            var searchBoxFeatureSwitch = new AzureFeatureManager(ConfigurationManager.AppSettings["SearchBox-Feature"].ToString())
+                .GetAzureFeatureFlag();
 
             MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
             return View(updateContact);
@@ -139,8 +154,10 @@ namespace Dynamics_365_WebApp.Controllers
             // Set the pagination and search feature switches
             var paginationFeatureSwitch = new BLL.FeatureSwitch().
                 CheckPaginationFeatureAllowed();
-            var searchBoxFeatureSwitch = new BLL.FeatureSwitch().
-                CheckSearchBoxFeatureAllowed();
+            
+            //  Set the search box feature switch using Azure feature management
+            var searchBoxFeatureSwitch = new AzureFeatureManager(ConfigurationManager.AppSettings["SearchBox-Feature"].ToString())
+                .GetAzureFeatureFlag();
 
             var success = new UpdateDynamicsContact().
                 UpdateContactData(service, updatedContact);
