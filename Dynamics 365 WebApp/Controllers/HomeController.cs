@@ -5,13 +5,14 @@ using Microsoft.Xrm.Sdk;
 using System;
 using Dynamics_365_WebApp.BLL;
 using System.Configuration;
-
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Dynamics_365_WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index(string option, string search, int? currentPageNumber)
+        public async System.Threading.Tasks.Task<ActionResult> Index(string option, string search, int? currentPageNumber)
         {
             // Connects to Dynamics 365 and gets a list of contacts using the search data and option values
             // from the search function on the index page. A sorted paginated list is returned, along with 
@@ -30,7 +31,7 @@ namespace Dynamics_365_WebApp.Controllers
                 GetContactList(contactRecords);
 
             // Set the pagination feature switches using custom feature database
-            var paginationFeatureSwitch = new BLL.FeatureSwitch().
+            var paginationFeatureSwitch = new BLL.SQLFeatureManagement().
                 CheckPaginationFeatureAllowed();
 
             //  Set the search box feature switch using Azure feature management
@@ -40,7 +41,6 @@ namespace Dynamics_365_WebApp.Controllers
             var (paginatedContactList, nextPageNumber, hasPreviousPage, hasNextPage) =
                 new PaginateContactList(paginationFeatureSwitch, contactList, currentPageNumber, pageSize).
                 CreatePaginatedList();
-
 
             MyViewData.SetData(service, option, search, nextPageNumber, hasPreviousPage, hasNextPage, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
             return View(paginatedContactList);
@@ -52,7 +52,7 @@ namespace Dynamics_365_WebApp.Controllers
             var (_, service) = new CreateDynamicsConnection().ConnectToDynamics();
 
             // Set the pagination and search feature switches
-            var paginationFeatureSwitch = new BLL.FeatureSwitch().
+            var paginationFeatureSwitch = new BLL.SQLFeatureManagement().
                 CheckPaginationFeatureAllowed();
 
             //  Set the search box feature switch using Azure feature management
@@ -71,7 +71,7 @@ namespace Dynamics_365_WebApp.Controllers
                 ConnectToDynamics();
 
             // Set the pagination and search feature switches
-            var paginationFeatureSwitch = new BLL.FeatureSwitch().
+            var paginationFeatureSwitch = new BLL.SQLFeatureManagement().
                 CheckPaginationFeatureAllowed();
             
             //  Set the search box feature switch using Azure feature management
@@ -91,8 +91,6 @@ namespace Dynamics_365_WebApp.Controllers
 
             if (success)
             {
-
- 
                 MyViewData.SetData(service, option, search, currentPageNumber, null, null, null, paginationFeatureSwitch, searchBoxFeatureSwitch);
                 var pageNumber = (currentPageNumber > 0) ? currentPageNumber - 1 : null;
                 return RedirectToAction("Index", new { option = option, search = search, currentPageNumber = pageNumber });
@@ -131,7 +129,7 @@ namespace Dynamics_365_WebApp.Controllers
                 GetContact(crmConnection, id);
 
             // Set the pagination and search feature switches
-            var paginationFeatureSwitch = new BLL.FeatureSwitch().
+            var paginationFeatureSwitch = new BLL.SQLFeatureManagement().
                 CheckPaginationFeatureAllowed();
             
             //  Set the search box feature switch using Azure feature management
@@ -152,7 +150,7 @@ namespace Dynamics_365_WebApp.Controllers
                 ConnectToDynamics();
             
             // Set the pagination and search feature switches
-            var paginationFeatureSwitch = new BLL.FeatureSwitch().
+            var paginationFeatureSwitch = new BLL.SQLFeatureManagement().
                 CheckPaginationFeatureAllowed();
             
             //  Set the search box feature switch using Azure feature management

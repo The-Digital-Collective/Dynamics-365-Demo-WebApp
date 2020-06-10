@@ -232,8 +232,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BLL\AzureFeatureManager.cs" />
-    <Compile Include="BLL\FeatureSwitch.cs" />
+    <Compile Include="BLL\SQLFeatureManagement.cs" />
     <Compile Include="BLL\IncompleteFeature.cs" />
+    <Compile Include="DAL\GetAPIData.cs" />
     <Compile Include="DAL\GetDynamicsContacts.cs" />
     <Compile Include="BLL\PaginateContactList.cs" />
     <Compile Include="Controllers\HomeController.cs" />

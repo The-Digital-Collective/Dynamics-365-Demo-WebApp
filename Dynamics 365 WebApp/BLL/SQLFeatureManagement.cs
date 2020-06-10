@@ -6,7 +6,7 @@ using Dynamics_365_WebApp.Interfaces;
 
 namespace Dynamics_365_WebApp.BLL
 {
-    public class FeatureSwitch : IFeatureSwitch
+    public class SQLFeatureManagement : IFeatureSwitch
     {
         public bool CheckPaginationFeatureAllowed()
         {
